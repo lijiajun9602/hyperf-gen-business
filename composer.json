@@ -19,7 +19,7 @@
   "require": {
     "php": ">=8.2",
     "96qbhy/hyperf-auth": "^3.1",
-    "free2one/hyperf-php-accessor":  "*",
+    "free2one/hyperf-php-accessor":  "0.5.3.*",
     "tangwei/apidocs": "~3.0.1",
     "tangwei/knife4j-ui": "^1.0",
     "lishun/enums": "^1.0",
