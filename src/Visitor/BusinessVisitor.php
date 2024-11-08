@@ -117,7 +117,7 @@ class BusinessVisitor extends AbstractVisitor
             $namespaceIn = $project->namespace($path) . $this->className . "\In\\";
             $node = new Class_($class);
             $namespace = new Namespace_(new Name($namespace));
-            $uses[] = new Use_([new UseUse(new Name("App\Model\\" . $this->className))]);
+            $uses[] = new Use_([new UseUse(new Name($this->data->getClass()))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "CreateDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "PageDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "UpdateDtoIn"))]);
@@ -331,7 +331,7 @@ class BusinessVisitor extends AbstractVisitor
                         new Variable('this'),
                         new Identifier(Str::camel($this->className) . "Mapper"),
                     ),
-                    new Identifier('getUserById'), // 调用的方法名
+                    new Identifier(Str::camel("get" . $this->className . "ById")), // 调用的方法名
                     [
                         new Arg(new Variable($byId))
                     ]
