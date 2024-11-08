@@ -99,6 +99,9 @@ class GenDtoVisitor extends AbstractVisitor
     public function getStmt($node): void
     {
         $items = [];
+        if(empty($node->stmts)){
+            return;
+        }
         foreach ($node->stmts as $value) {
             if ($value instanceof Enum_) {
                 foreach ($value->stmts as $stmts) {
