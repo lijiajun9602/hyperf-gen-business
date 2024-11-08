@@ -1,0 +1,57 @@
+{
+  "name": "lijiajun9602/hyperf-gen-business",
+  "description": "A gen-business library for Hyperf.",
+  "license": "MIT",
+  "keywords": [
+    "php",
+    "gen",
+    "business",
+    "hyperf",
+    "swagger",
+    "hyperf swagger"
+  ],
+  "authors": [
+    {
+      "name": "lijiajun",
+      "email": "396948873@qq.com"
+    }
+  ],
+  "require": {
+    "php": ">=8.2",
+    "96qbhy/hyperf-auth": "^3.1",
+    "free2one/hyperf-php-accessor": "^0.4.0",
+    "tangwei/apidocs": "~3.0.1",
+    "tangwei/knife4j-ui": "^1.0",
+    "lishun/enums": "^1.0",
+    "hyperf/redis": "~3.1.0",
+    "hyperf/paginator": "^3.1",
+    "hyperf/database": "~3.1.0",
+    "hyperf/db-connection": "~3.1.0",
+    "hyperf/http-server": "~3.1.0",
+    "hyperf/config": "~3.1.0"
+  },
+  "require-dev": {
+    "friendsofphp/php-cs-fixer": "^3.0",
+    "mockery/mockery": "^1.0",
+    "phpstan/phpstan": "^1.0",
+    "phpunit/phpunit": ">=7.0",
+    "symfony/var-dumper": "^5.1"
+  },
+  "suggest": {
+
+  },
+  "autoload": {
+    "psr-4": {
+      "Hyperf\\ApiDocs\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "HyperfTest\\ApiDocs\\": "tests/"
+    }
+  },
+
+  "config": {
+    "sort-packages": true
+  }
+}
