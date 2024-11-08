@@ -500,7 +500,7 @@ class BusinessVisitor extends AbstractVisitor
         $methodName = Str::camel("get" . $this->className . "ById");
         $node = $this->getNode($in, $methodName);
         $class = $this->data->getClass();
-        $inId = "get" . Str::ucfirst(Str::camel((new $class)->getKeyName()));
+        $inId = "get" . Str::ucfirst(CommonUtil::getTablePrimaryKey((new $class)->getTable()));
         $arg = new Arg(new String_($this->classComment . "详情"));
         $arg->name = new Identifier("summary");
         $attribute1 = new Attribute(new Name("ApiOperation"), [$arg]);

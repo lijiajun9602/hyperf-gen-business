@@ -41,4 +41,11 @@ class  CommonUtil
        return Db::connection()->table('information_schema.TABLES')->where('TABLE_NAME', $table)
             ->where('TABLE_SCHEMA', Db::connection()->getDatabaseName())->value('TABLE_COMMENT');
     }
+
+    public static function getTablePrimaryKey($table)
+    {
+        return Db::connection()->table('information_schema.columns')->where('TABLE_NAME', $table)
+            ->where('TABLE_SCHEMA', Db::connection()->getDatabaseName())
+            ->where('column_key','PRI')->value('column_name');
+    }
 }
