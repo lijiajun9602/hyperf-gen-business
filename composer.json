@@ -32,6 +32,7 @@
     "ext-redis": "*"
   },
   "require-dev": {
+    "roave/security-advisories": "dev-latest",
     "friendsofphp/php-cs-fixer": "^3.0",
     "mockery/mockery": "^1.0",
     "phpstan/phpstan": "^1.0",
