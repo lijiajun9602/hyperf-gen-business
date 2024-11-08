@@ -150,7 +150,7 @@ class GenDtoVisitor extends AbstractVisitor
             $node = new Class_($class);
             // 创建一个代码美化器
             $prettyPrinter = new Standard();
-            [$stmts, $enumIf, $userIf] = $this->buildInProperty($outName);
+            [$stmts, $enumIf] = $this->buildInProperty($outName);
             $namespace = new Namespace_(new Name($namespace));
             $classUses = [];
             $uses[] = new Use_([new UseUse(new Name(Dto::class))]);
@@ -286,7 +286,6 @@ class GenDtoVisitor extends AbstractVisitor
     private function buildInProperty($outName): array
     {
         $enumIf = false;
-        $userIf = false;
         $stmts = [];
         $array = ['created_at', 'updated_at', 'deleted_at', 'lock'];
         // array_push($array,...$notIn);
@@ -303,10 +302,6 @@ class GenDtoVisitor extends AbstractVisitor
             if ($outName === 'PageDtoIn') {
                 continue;
             }
-            if ($column['column_name'] === 'user_id') {
-                $userIf = true;
-                continue;
-            }
 
             if ($column['data_type'] === "enum") {
                 $enumIf = true;
@@ -316,7 +311,7 @@ class GenDtoVisitor extends AbstractVisitor
                 $stmts[] = $stmt;
             }
         }
-        return [$stmts, $enumIf, $userIf];
+        return [$stmts, $enumIf];
     }
 
 

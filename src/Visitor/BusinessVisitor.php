@@ -561,7 +561,7 @@ class BusinessVisitor extends AbstractVisitor
         $in = $camelClassName . "PageDtoIn";
         $methodName = Str::camel("get" . $this->className . "PageInfo");
         $node = $this->getNode($in, $methodName);
-        $arg = new Arg(new String_($camelClassName . "分页列表"));
+        $arg = new Arg(new String_($this->classComment . "分页列表"));
         $arg->name = new Identifier("summary");
         $attribute1 = new Attribute(new Name("ApiOperation"), [$arg]);
         $arg = new Arg(new String_("v1.0/" . $methodName));
