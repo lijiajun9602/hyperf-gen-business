@@ -340,7 +340,7 @@ class BusinessVisitor extends AbstractVisitor
         );
         $if = new If_(new BooleanNot(new Variable($camelClassName)));
         $if->stmts[] = new Expression(new Throw_(new New_(new Name('AppBadRequestException'), args: [
-            new Arg(new String_($this->className . "不存在"))
+            new Arg(new String_($this->classComment . "不存在"))
         ]
         )));
         $node->stmts[] = $if;
