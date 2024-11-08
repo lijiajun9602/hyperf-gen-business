@@ -32,9 +32,12 @@ use PhpParser\Node\Expr\Variable;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\Node\Param;
+use PhpParser\Node\Scalar\LNumber;
 use PhpParser\Node\Scalar\String_;
 use PhpParser\Node\Stmt\Class_;
 use PhpParser\Node\Stmt\ClassMethod;
+use PhpParser\Node\Stmt\Declare_;
+use PhpParser\Node\Stmt\DeclareDeclare;
 use PhpParser\Node\Stmt\Enum_;
 use PhpParser\Node\Stmt\EnumCase;
 use PhpParser\Node\Stmt\Expression;
@@ -147,6 +150,12 @@ class GenDtoVisitor extends AbstractVisitor
     public function getPrettyPrintInFile($class, $namespace, $outName, $classPath, $isMkdir): string
     {
         if ($isMkdir) {
+            $declareStrictTypes = new Declare_(
+                [new DeclareDeclare(
+                    "strict_types",
+                    new LNumber(1)
+                )]
+            );
             $node = new Class_($class);
             // 创建一个代码美化器
             $prettyPrinter = new Standard();
@@ -187,7 +196,7 @@ class GenDtoVisitor extends AbstractVisitor
             $node->attrGroups = $attributeGroup;
 
             array_push($node->stmts, ...$stmts);
-            return $prettyPrinter->prettyPrintFile([$namespace, $node]);
+            return $prettyPrinter->prettyPrintFile([$declareStrictTypes,$namespace, $node]);
         }
         $code = file_get_contents($classPath);
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
@@ -248,6 +257,12 @@ class GenDtoVisitor extends AbstractVisitor
     public function getPrettyPrintFile($class, $namespace, $classPath, $isMkdir): string
     {
         if ($isMkdir) {
+            $declareStrictTypes = new Declare_(
+                [new DeclareDeclare(
+                    "strict_types",
+                    new LNumber(1)
+                )]
+            );
             $node = new Class_($class);
 
             // 创建一个代码美化器
@@ -267,7 +282,7 @@ class GenDtoVisitor extends AbstractVisitor
             $attributeGroup = new AttributeGroup([$attribute]);
             $node->attrGroups = [$attributeGroup];
             array_push($node->stmts, ...$this->buildProperty());
-            return $prettyPrinter->prettyPrintFile([$namespace, $node]);
+            return $prettyPrinter->prettyPrintFile([$declareStrictTypes,$namespace, $node]);
         }
         $code = file_get_contents($classPath);
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
