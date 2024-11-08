@@ -21,11 +21,6 @@ class  CommonUtil
         }
     }
 
-    public static function getBasePath(): string
-    {
-        return dirname(__DIR__);
-    }
-
     public static function mkdirClass($class, string $outName, mixed $path): array
     {
         $isMkdir = false;
@@ -33,7 +28,7 @@ class  CommonUtil
         $className = $class . $outName;
         $namespace = $project->namespace($path);
         $genClass = $namespace . $className;
-        $classPath = static::getBasePath() . '/' . $project->path($genClass);
+        $classPath = BASE_PATH . '/' . $project->path($genClass);
         if (!file_exists($classPath)) {
             static::mkdir($classPath);
             $isMkdir = true;

@@ -70,9 +70,9 @@ class GenDtoVisitor extends AbstractVisitor
         $dtoOutPath = $path . "/" . $class[count($class) - 1];
         $inPath = $dtoOutPath . "/In";
         $outPath = $dtoOutPath . "/Out";
-        $this->mkdir(CommonUtil::getBasePath() . '/' . $dtoOutPath, 1);
-        $this->mkdir(CommonUtil::getBasePath() . '/' . $inPath, 1);
-        $this->mkdir(CommonUtil::getBasePath() . '/' . $outPath, 1);
+        $this->mkdir(BASE_PATH. '/' . $dtoOutPath, 1);
+        $this->mkdir(BASE_PATH. '/' . $inPath, 1);
+        $this->mkdir(BASE_PATH. '/' . $outPath, 1);
         $this->collectEnums($class);
         $this->collectClassOut($outPath, $class, "ListDtoOut");
         $this->collectClassOut($outPath, $class, "InfoDtoOut");
