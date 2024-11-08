@@ -1,6 +1,6 @@
 <?php /** @noinspection PhpUnusedAliasInspection */
 
-namespace App\Common\Dto;
+namespace Hyperf\GenBusiness\Common\Dto;
 
 use Hyperf\ApiDocs\Annotation\ApiModelProperty;
 use Hyperf\ApiDocs\Annotation\ApiVariable;

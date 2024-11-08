@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Common\Lock;
+namespace Hyperf\GenBusiness\Common\Lock;
 
 class ConfigProvider
 {

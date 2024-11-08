@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Common\Exception;
+namespace Hyperf\GenBusiness\Common\Exception;
 
 use Hyperf\Server\Exception\ServerException;
 use Lishun\Enums\Interfaces\EnumCodeInterface;

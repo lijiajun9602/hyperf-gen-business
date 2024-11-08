@@ -24,6 +24,7 @@ composer require lijiajun9602/hyperf-gen-business
 
 ## 使用
 
+
 ### 1. 发布配置文件
 
 ```bash

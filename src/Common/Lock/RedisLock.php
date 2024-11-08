@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Common\Lock;
+namespace Hyperf\GenBusiness\Common\Lock;
 
+use Hyperf\Redis\Redis;
 use Hyperf\Redis\RedisProxy;
 
 
@@ -10,7 +11,7 @@ class RedisLock extends Lock
     /**
      * @var RedisProxy
      */
-    protected $redis;
+    protected Redis $redis;
 
     public function __construct($redis, $name, $seconds, $owner = null)
     {
@@ -39,7 +40,7 @@ class RedisLock extends Lock
     {
         if ($this->isOwnedByCurrentProcess()) {
             $res = $this->redis->eval(LockScripts::releaseLock(), ['name' => $this->name, 'owner' => $this->owner], 1);
-            return $res == 1;
+            return $res === 1;
         }
         return false;
     }
@@ -50,11 +51,12 @@ class RedisLock extends Lock
     public function forceRelease()
     {
         $r = $this->redis->del($this->name);
-        return $r == 1;
+        return $r === 1;
     }
 
     /**
      * @inheritDoc
+     * @throws \RedisException
      */
     protected function getCurrentOwner()
     {

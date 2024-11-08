@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Enums;
+namespace Hyperf\GenBusiness\Common\Enums;
 
 use Lishun\Enums\Annotations\EnumCodePrefix;
 use Lishun\Enums\Interfaces\EnumCodeInterface;

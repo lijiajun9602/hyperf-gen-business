@@ -1,11 +1,11 @@
 <?php /** @noinspection PhpParamsInspection */
 
-namespace App\Common\Command\Visitor;
+namespace Hyperf\GenBusiness\Visitor;
 
-use App\Common\Dto\PageClass;
-use App\Common\Dto\UserJwtAuthIn;
-use App\Common\Enums\NewEnumCodeGet;
-use App\Common\Util\CommonUtil;
+use Hyperf\GenBusiness\Common\Dto\PageClass;
+use Hyperf\GenBusiness\Common\Dto\UserJwtAuthIn;
+use Hyperf\GenBusiness\Common\Enums\NewEnumCodeGet;
+use Hyperf\GenBusiness\Common\Util\CommonUtil;
 use Hyperf\ApiDocs\Annotation\ApiModel;
 use Hyperf\ApiDocs\Annotation\ApiModelProperty;
 use Hyperf\CodeParser\Project;

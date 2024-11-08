@@ -10,7 +10,7 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Common\Command\Visitor;
+namespace Hyperf\GenBusiness\Visitor;
 
 use Hyperf\CodeParser\PhpParser;
 use Hyperf\Database\Commands\Ast\AbstractVisitor;

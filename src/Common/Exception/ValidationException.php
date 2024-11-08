@@ -1,7 +1,7 @@
 <?php
 
 
-namespace App\Common\Exception;
+namespace Hyperf\GenBusiness\Common\Exception;
 
 
 use Hyperf\Server\Exception\ServerException;

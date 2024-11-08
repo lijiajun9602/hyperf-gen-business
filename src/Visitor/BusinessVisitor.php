@@ -1,12 +1,12 @@
 <?php /** @noinspection CallableParameterUseCaseInTypeContextInspection */
 
-namespace App\Common\Command\Visitor;
+namespace Hyperf\GenBusiness\Visitor;
 
-use App\Common\Controller\AbstractController;
-use App\Common\Dto\ResponseClass;
-use App\Common\Exception\AppBadRequestException;
-use App\Common\Lock\RedisLock;
-use App\Common\Util\CommonUtil;
+use Hyperf\GenBusiness\Common\Controller\AbstractController;
+use Hyperf\GenBusiness\Common\Dto\ResponseClass;
+use Hyperf\GenBusiness\Common\Exception\AppBadRequestException;
+use Hyperf\GenBusiness\Common\Lock\RedisLock;
+use Hyperf\GenBusiness\Common\Util\CommonUtil;
 use Hyperf\ApiDocs\Annotation\Api;
 use Hyperf\ApiDocs\Annotation\ApiOperation;
 use Hyperf\ApiDocs\Annotation\ApiResponse;

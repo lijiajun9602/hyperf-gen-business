@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Util;
+namespace Hyperf\GenBusiness\Common\Util;
 
 use Hyperf\CodeParser\Project;
 use Hyperf\DbConnection\Db;

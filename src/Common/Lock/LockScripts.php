@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Lock;
+namespace Hyperf\GenBusiness\Common\Lock;
 
 class LockScripts
 {

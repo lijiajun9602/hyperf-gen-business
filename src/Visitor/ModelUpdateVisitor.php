@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Command\Visitor;
+namespace Hyperf\GenBusiness\Visitor;
 use Hyperf\Database\Commands\Ast\ModelUpdateVisitor as Visitor;
 use Hyperf\Stringable\Str;
 class ModelUpdateVisitor extends Visitor

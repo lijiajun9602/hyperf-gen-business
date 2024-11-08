@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Lock;
+namespace Hyperf\GenBusiness\Common\Lock;
 
 use Carbon\Carbon;
 use DateInterval;
@@ -13,18 +13,16 @@ trait InteractsWithTime
      * @param $delay
      * @return int|mixed
      */
-    protected function secondsUtil($delay)
+    protected function secondsUtil($delay): mixed
     {
         $delay = $this->getDateTimeAfterInterval($delay);
         return $delay instanceof DateTimeInterface
             ? max(0, $delay->getTimestamp() - $this->currentTime())
-            : intval($delay);
+            : (int)$delay;
     }
 
     /**
      * Get DateTime Instance from an interval
-     * @param $delay
-     * @return Carbon
      */
     protected function getDateTimeAfterInterval($delay)
     {
@@ -39,16 +37,16 @@ trait InteractsWithTime
      * Get current Time
      * @return int
      */
-    protected function currentTime()
+    protected function currentTime(): int
     {
         return Carbon::now()->getTimestamp();
     }
 
     /**
-     * @param DateTimeInterface | int| DateInterval $delay
+     * @param DateInterval | DateTimeInterface| int $delay
      * @return int
      */
-    protected function availableAt($delay = 0)
+    protected function availableAt(DateInterval|DateTimeInterface|int $delay = 0): int
     {
         $delay = $this->getDateTimeAfterInterval($delay);
         return $delay instanceof DateTimeInterface

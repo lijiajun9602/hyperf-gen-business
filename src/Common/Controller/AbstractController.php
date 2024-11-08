@@ -10,10 +10,10 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Common\Controller;
+namespace Hyperf\GenBusiness\Common\Controller;
 
-use App\Common\Http\RequestJson;
-use App\Common\Http\ResponseJson;
+use Hyperf\GenBusiness\Common\Http\RequestJson;
+use Hyperf\GenBusiness\Common\Http\ResponseJson;
 use Hyperf\Di\Annotation\Inject;
 use Psr\Container\ContainerInterface;
 

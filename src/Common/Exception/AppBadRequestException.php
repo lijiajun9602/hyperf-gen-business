@@ -2,10 +2,10 @@
 
 declare(strict_types=1);
 
-namespace App\Common\Exception;
+namespace Hyperf\GenBusiness\Common\Exception;
 
 
-use App\Common\Enums\ErrorEnum;
+use Hyperf\GenBusiness\Common\Enums\ErrorEnum;
 use Hyperf\Server\Exception\ServerException;
 
 class AppBadRequestException extends ServerException

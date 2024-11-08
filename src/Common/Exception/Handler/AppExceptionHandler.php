@@ -10,13 +10,13 @@ declare(strict_types=1);
  * @license  https://github.com/hyperf/hyperf/blob/master/LICENSE
  */
 
-namespace App\Common\Exception\Handler;
+namespace Hyperf\GenBusiness\Common\Exception\Handler;
 
 
-use App\Common\Enums\ErrorEnum;
-use App\Common\Exception\AppBadRequestException;
-use App\Common\Exception\BusinessException;
-use App\Common\Http\ResponseJson;
+use Hyperf\GenBusiness\Common\Enums\ErrorEnum;
+use Hyperf\GenBusiness\Common\Exception\AppBadRequestException;
+use Hyperf\GenBusiness\Common\Exception\BusinessException;
+use Hyperf\GenBusiness\Common\Http\ResponseJson;
 use Hyperf\Contract\StdoutLoggerInterface;
 use Hyperf\ExceptionHandler\ExceptionHandler;
 use Hyperf\HttpMessage\Exception\BadRequestHttpException;

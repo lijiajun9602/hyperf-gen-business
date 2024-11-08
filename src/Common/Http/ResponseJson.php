@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Common\Http;
+namespace Hyperf\GenBusiness\Common\Http;
 
-use App\Common\Dto\MetaClass;
-use App\Common\Dto\ResponseClass;
+use Hyperf\GenBusiness\Common\Dto\MetaClass;
+use Hyperf\GenBusiness\Common\Dto\ResponseClass;
 use Hyperf\DTO\Mapper;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Paginator\LengthAwarePaginator;

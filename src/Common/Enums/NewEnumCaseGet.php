@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Common\Enums;
+namespace Hyperf\GenBusiness\Common\Enums;
 
 use Lishun\Enums\Interfaces\EnumCaseInterface;
 use Lishun\Enums\Traits\EnumCaseGet;

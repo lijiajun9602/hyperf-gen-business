@@ -1,7 +1,7 @@
 <?php
 declare(strict_types=1);
 
-namespace App\Common\Http;
+namespace Hyperf\GenBusiness\Common\Http;
 
 use Hyperf\HttpServer\Request;
 
