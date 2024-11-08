@@ -1,4 +1,4 @@
-# PHP Swagger Api Docs
+# PHP Gen Business Api 
 基于 [Hyperf](https://github.com/hyperf/hyperf) 框架的 根据表生成相应的接口
 
 ## 优点
