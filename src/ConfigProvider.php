@@ -25,7 +25,7 @@ class ConfigProvider
             'publish' => [
                 [
                     'id' => 'config',
-                    'description' => 'The config for api-docs.',
+                    'description' => 'The config for gen-business.',
                     'source' => __DIR__ . '/../publish/gen-business.php',
                     'destination' => BASE_PATH . '/config/autoload/gen-business.php',
                 ],
@@ -34,6 +34,11 @@ class ConfigProvider
                     'description' => 'The config for api-docs.',
                     'source' => __DIR__ . '/../publish/api_docs.php',
                     'destination' => BASE_PATH . '/config/autoload/api_docs.php',
+                ], [
+                    'id' => 'config',
+                    'description' => 'The config for php-accessor.',
+                    'source' => __DIR__ . '/../publish/php-accessor.php',
+                    'destination' => BASE_PATH . '/config/autoload/php-accessor.php',
                 ],
             ],
         ];
