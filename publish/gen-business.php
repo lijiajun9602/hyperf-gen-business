@@ -15,16 +15,16 @@ return [
             'namespace' => 'app/Controller/Dto',
         ],
         'Enums' => [
-            'namespace' => 'app/Enums/gen',
+            'namespace' => 'app/Enums',
         ],
         'BusinessServices' => [
-            'namespace' => 'app/Service/gen',
+            'namespace' => 'app/Service',
         ],
         'BusinessMappers' => [
-            'namespace' => 'app/Mapper/gen',
+            'namespace' => 'app/Mapper',
         ],
         'BusinessControllers' => [
-            'namespace' => 'app/Controller/gen',
+            'namespace' => 'app/Controller',
         ],
     ],
 ];
