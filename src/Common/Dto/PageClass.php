@@ -2,6 +2,7 @@
 
 namespace Hyperf\GenBusiness\Common\Dto;
 
+
 use Hyperf\ApiDocs\Annotation\ApiModelProperty;
 use Hyperf\PhpAccessor\Annotation\HyperfData;
 use PhpAccessor\Attribute\Data;

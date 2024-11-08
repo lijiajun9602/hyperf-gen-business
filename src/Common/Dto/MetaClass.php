@@ -2,7 +2,7 @@
 
 namespace Hyperf\GenBusiness\Common\Dto;
 
-use Hyperf\ApiDocs\Annotation\ApiModelProperty;
+use Hyperf\GenBusiness\Annotation\ApiModelProperty;
 
 class MetaClass
 {

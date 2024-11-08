@@ -2,14 +2,14 @@
 
 namespace Hyperf\GenBusiness\Visitor;
 
+use Hyperf\ApiDocs\Annotation\Api;
+use Hyperf\ApiDocs\Annotation\ApiOperation;
+use Hyperf\ApiDocs\Annotation\ApiResponse;
 use Hyperf\GenBusiness\Common\Controller\AbstractController;
 use Hyperf\GenBusiness\Common\Dto\ResponseClass;
 use Hyperf\GenBusiness\Common\Exception\AppBadRequestException;
 use Hyperf\GenBusiness\Common\Lock\RedisLock;
 use Hyperf\GenBusiness\Common\Util\CommonUtil;
-use Hyperf\ApiDocs\Annotation\Api;
-use Hyperf\ApiDocs\Annotation\ApiOperation;
-use Hyperf\ApiDocs\Annotation\ApiResponse;
 use Hyperf\CodeParser\Project;
 use Hyperf\Contract\LengthAwarePaginatorInterface;
 use Hyperf\Database\Commands\Ast\AbstractVisitor;
@@ -54,7 +54,6 @@ use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
 use PhpParser\Node\VarLikeIdentifier;
 use PhpParser\PrettyPrinter\Standard;
-use RuntimeException;
 use function Hyperf\Config\config;
 
 class BusinessVisitor extends AbstractVisitor
@@ -67,9 +66,9 @@ class BusinessVisitor extends AbstractVisitor
     public function beforeTraverse(array $nodes): void
     {
         $class = $this->data->getClass();
+        $this->classComment = CommonUtil::getTableComment((new $class)->getTable());
         $class = explode("\\", $class);
         $this->className = $class[count($class) - 1];
-        $this->classComment = CommonUtil::getTableComment((new $class)->getTable());
         $this->collectMapper();
         $this->collectService();
         $this->collectController();

@@ -2,12 +2,12 @@
 
 namespace Hyperf\GenBusiness\Visitor;
 
+use Hyperf\ApiDocs\Annotation\ApiModel;
+use Hyperf\ApiDocs\Annotation\ApiModelProperty;
 use Hyperf\GenBusiness\Common\Dto\PageClass;
 use Hyperf\GenBusiness\Common\Dto\UserJwtAuthIn;
 use Hyperf\GenBusiness\Common\Enums\NewEnumCodeGet;
 use Hyperf\GenBusiness\Common\Util\CommonUtil;
-use Hyperf\ApiDocs\Annotation\ApiModel;
-use Hyperf\ApiDocs\Annotation\ApiModelProperty;
 use Hyperf\CodeParser\Project;
 use Hyperf\Database\Commands\Ast\AbstractVisitor;
 use Hyperf\Database\Model\Model;
