@@ -4,10 +4,6 @@ declare(strict_types=1);
 
 namespace Hyperf\GenBusiness;
 
-use Hyperf\GenBusiness\Listener\AfterDtoStartListener;
-use Hyperf\GenBusiness\Listener\AfterWorkerStartListener;
-use Hyperf\GenBusiness\Listener\BootAppRouteListener;
-
 class ConfigProvider
 {
     public function __invoke(): array

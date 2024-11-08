@@ -48,9 +48,9 @@
       "Illuminate\\Support\\": ""
     }
   },
-  "autoload-dev": {
-    "psr-4": {
-      "HyperfTest\\ApiDocs\\": "tests/"
+  "extra": {
+    "hyperf": {
+      "config": "Hyperf\\GenBusiness\\ConfigProvider"
     }
   },
 
