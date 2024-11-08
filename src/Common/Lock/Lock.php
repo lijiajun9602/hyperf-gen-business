@@ -3,8 +3,7 @@
 namespace Hyperf\GenBusiness\Common\Lock;
 
 use Closure;
-use Illuminate\Support\InteractsWithTime;
-use Illuminate\Support\Str;
+use Hyperf\Stringable\Str;
 
 
 abstract class  Lock implements LockContract
