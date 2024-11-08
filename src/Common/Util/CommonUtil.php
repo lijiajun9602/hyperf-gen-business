@@ -4,6 +4,7 @@ namespace Hyperf\GenBusiness\Common\Util;
 
 use Hyperf\CodeParser\Project;
 use Hyperf\DbConnection\Db;
+use Hyperf\Stringable\Str;
 use RuntimeException;
 
 class  CommonUtil
@@ -44,8 +45,8 @@ class  CommonUtil
 
     public static function getTablePrimaryKey($table)
     {
-        return Db::connection()->table('information_schema.columns')->where('TABLE_NAME', $table)
+        return Str::camel(Db::connection()->table('information_schema.columns')->where('TABLE_NAME', $table)
             ->where('TABLE_SCHEMA', Db::connection()->getDatabaseName())
-            ->where('column_key','PRI')->value('column_name');
+            ->where('column_key','PRI')->value('column_name'));
     }
 }
