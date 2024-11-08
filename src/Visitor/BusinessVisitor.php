@@ -154,7 +154,7 @@ class BusinessVisitor extends AbstractVisitor
             $namespaceEnum = $project->namespace($pathEnum);
             $uses[] = new Use_([new UseUse(new Name($namespaceEnum . $this->className . "Enum"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceMapper . $this->className . "Mapper"))]);
-            $uses[] = new Use_([new UseUse(new Name("App\Model\\" . $this->className))]);
+            $uses[] = new Use_([new UseUse(new Name($this->data->getClass()))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "CreateDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "PageDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "UpdateDtoIn"))]);
