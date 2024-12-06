@@ -17,6 +17,7 @@ use Hyperf\DTO\Annotation\Validation\Required;
 use Hyperf\PhpAccessor\Annotation\HyperfData;
 use Hyperf\Stringable\Str;
 use Lishun\Enums\Annotations\EnumCode;
+use Lishun\Enums\Annotations\EnumCodePrefix;
 use Lishun\Enums\Interfaces\EnumCodeInterface;
 use PhpAccessor\Attribute\Data;
 use PhpParser\Node\Arg;
@@ -222,16 +223,24 @@ class GenDtoVisitor extends AbstractVisitor
                 'scalarType' => 'string',
             ]);
             $node->implements = [new Name("EnumCodeInterface")];
+            $arg = new Arg(new String_($class ));
+            $arg->name = new Identifier("prefixCode");
+            $arg1 = new Arg(new String_($className ));
+            $arg1->name = new Identifier("prefixMsg");
+            $attribute = new Attribute(new Name("EnumCodePrefix"), [$arg, $arg1]);
+            $attributeGroup[] = new AttributeGroup([$attribute]);
 
             $namespace = new Namespace_(new Name($namespace));
             $uses[] = new Use_([new UseUse(new Name(EnumCodeInterface::class))]);
             $uses[] = new Use_([new UseUse(new Name(NewEnumCodeGet::class))]);
             $uses[] = new Use_([new UseUse(new Name(EnumCode::class))]);
+            $uses[] = new Use_([new UseUse(new Name(EnumCodePrefix::class))]);
             array_push($namespace->stmts, ...$uses);
             $nodeUses[] = new Use_([new UseUse(new Name('NewEnumCodeGet'))]);
             array_push($node->stmts, ...$nodeUses);
             $stmts = $this->buildEnumProperty($className);
             array_push($node->stmts, ...$stmts);
+            $node->attrGroups = $attributeGroup;
             return (new Standard())->prettyPrintFile([$namespace, $node]);
         }
 

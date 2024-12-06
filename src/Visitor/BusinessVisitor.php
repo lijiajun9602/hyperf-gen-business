@@ -397,14 +397,13 @@ class BusinessVisitor extends AbstractVisitor
         $node->stmts[] = new Expression(
             new Assign(
                 new Variable('redisKey'),
-                new MethodCall(
+                new PropertyFetch(
                     new ClassConstFetch(
                         new Name($this->className . "Enum"), // 调用方法的对象,
                         new VarLikeIdentifier(Str::upper($type) . "_LOCK_KEY"),
                     ),
-                    new Identifier("getCode"), // 被调用的方法名
+                    new Identifier("value"),
                 ),
-
             )
         );
         $class = $this->data->getClass();
