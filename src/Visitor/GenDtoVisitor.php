@@ -324,6 +324,9 @@ class GenDtoVisitor extends AbstractVisitor
             if ($column['data_type'] === "enum") {
                 $enumIf = true;
             }
+            if ($column['column_name'] === 'user_id') {
+                continue;
+            }
             $stmt = $this->createInProperty($name, $type, $column);
             if ($stmt !== null) {
                 $stmts[] = $stmt;
