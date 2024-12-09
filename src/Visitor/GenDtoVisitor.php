@@ -82,7 +82,7 @@ class GenDtoVisitor extends AbstractVisitor
         $this->collectClassOut($outPath, $class, "InfoDtoOut");
         $this->collectClassIn($inPath, $class, "CreateDtoIn");
         $this->collectClassIn($inPath, $class, "UpdateDtoIn");
-        $this->collectClassIn($inPath, $class, "UserDeletesDtoIn");
+        $this->collectClassIn($inPath, $class, "DeletesDtoIn");
         $this->collectClassIn($inPath, $class, "ByIdDtoIn");
         $this->collectClassIn($inPath, $class, "PageDtoIn");
 
