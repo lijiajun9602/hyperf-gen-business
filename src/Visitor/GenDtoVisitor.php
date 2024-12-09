@@ -337,15 +337,17 @@ class GenDtoVisitor extends AbstractVisitor
             if ($column['data_type'] === "enum") {
                 $enumIf = true;
             }
-            if ($column['column_name'] === 'user_id') {
-                continue;
-            }
+
             if ($outName === 'DeletesDtoIn' && !empty($column['column_key'])) {
-                $name = $column['column_name'] . "s";
+                $column['column_name'] .= "s";
+                $name = $this->option->isCamelCase() ? Str::camel($column['column_name']) : $column['column_name'];
                 $column['data_type'] = "array";
                 $column['column_type'] = "array";
                 $column['data_comment'] = $column['column_comment'] . "集合";
                 $type = "array";
+            }
+            if ($column['column_name'] === 'user_id') {
+                continue;
             }
             $stmt = $this->createInProperty($name, $type, $column);
             if ($stmt !== null) {
