@@ -5,6 +5,7 @@ namespace Hyperf\GenBusiness\Visitor;
 use Hyperf\ApiDocs\Annotation\Api;
 use Hyperf\ApiDocs\Annotation\ApiOperation;
 use Hyperf\ApiDocs\Annotation\ApiResponse;
+use Hyperf\Database\Model\Collection;
 use Hyperf\GenBusiness\Common\Controller\AbstractController;
 use Hyperf\GenBusiness\Common\Dto\ResponseClass;
 use Hyperf\GenBusiness\Common\Exception\AppBadRequestException;
@@ -156,12 +157,14 @@ class BusinessVisitor extends AbstractVisitor
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "CreateDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "PageDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "UpdateDtoIn"))]);
+            $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "DeletesDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name(Inject::class))]);
             $uses[] = new Use_([new UseUse(new Name(LengthAwarePaginatorInterface::class))]);
             $uses[] = new Use_([new UseUse(new Name(AppBadRequestException::class))]);
             $uses[] = new Use_([new UseUse(new Name(Redis::class))]);
             $uses[] = new Use_([new UseUse(new Name(RedisLock::class))]);
             $uses[] = new Use_([new UseUse(new Name(Transactional::class))]);
+            $uses[] = new Use_([new UseUse(new Name(Collection::class))]);
             array_push($namespace->stmts, ...$uses);
             $stmts = $this->buildServiceProperty();
             $methods = $this->buildServiceMethods();
@@ -382,7 +385,7 @@ class BusinessVisitor extends AbstractVisitor
         )));
         $node->stmts[] = $if;
         $node->stmts[] = new Return_(
-            new Variable($camelClassName)
+            new Variable("Collection")
         );
         return $node;
     }
@@ -417,10 +420,11 @@ class BusinessVisitor extends AbstractVisitor
 
     private function buildServiceMethodCreateOrUpdate($type): ClassMethod
     {
-        $camelClassName = Str::camel($this->className);
+        $returnClassName = $camelClassName = Str::camel($this->className);
         $ucFirstType = Str::ucfirst($type);
         $createClassName = $type . $this->className;
         $in = $camelClassName . $ucFirstType . "DtoIn";
+
         $param = new Param(new Variable($in), null, $this->className . $ucFirstType . "DtoIn");
         $node = new ClassMethod($createClassName, [
             'flags' => Class_::MODIFIER_PUBLIC,
@@ -487,7 +491,7 @@ class BusinessVisitor extends AbstractVisitor
                 )
             );
             $args[] = new Arg(new Variable($camelClassName));
-            $createClassName = "bool";
+            $returnClassName = "bool";
         }
         $stmts[] = new Return_(
             new MethodCall(
@@ -536,7 +540,7 @@ class BusinessVisitor extends AbstractVisitor
         $node->stmts[] = $if;
 
         $node->stmts[] = new Return_(
-            new Variable($camelClassName)
+            new Variable($returnClassName)
         );
         return $node;
     }

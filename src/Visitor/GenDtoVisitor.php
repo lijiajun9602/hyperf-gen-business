@@ -343,7 +343,7 @@ class GenDtoVisitor extends AbstractVisitor
                 $name = $this->option->isCamelCase() ? Str::camel($column['column_name']) : $column['column_name'];
                 $column['data_type'] = "array";
                 $column['column_type'] = "array";
-                $column['data_comment'] = $column['column_comment'] . "集合";
+                $column['column_comment'] = $column['column_comment'] . "集合";
                 $type = "array";
             }
             if ($column['column_name'] === 'user_id') {
@@ -495,7 +495,7 @@ class GenDtoVisitor extends AbstractVisitor
         if (!in_array('UPDATE_LOCK_KEY', $this->items, true)) {
             $cases[] = $this->getEnumCase('UPDATE_LOCK_KEY', new String_($this->fieldToUnderscore($className) . ':update_lock:'), "编辑锁");
         }
-        if (!in_array('DELETE_LOCK_KEY', $this->items, true)) {
+        if (!in_array('DELETES_LOCK_KEY', $this->items, true)) {
             $cases[] = $this->getEnumCase('DELETE_LOCK_KEY', new String_($this->fieldToUnderscore($className) . ':delete_lock:'), "删除锁");
         }
         array_push($cases, ...$this->getColumnBuildEnumProperty());
