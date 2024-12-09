@@ -28,8 +28,10 @@ use PhpParser\Node\Attribute;
 use PhpParser\Node\AttributeGroup;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\BooleanNot;
+use PhpParser\Node\Expr\Cast\Bool_;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\Closure;
+use PhpParser\Node\Expr\ConstFetch;
 use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Expr\New_;
 use PhpParser\Node\Expr\PropertyFetch;
@@ -55,6 +57,7 @@ use PhpParser\Node\Stmt\Use_;
 use PhpParser\Node\Stmt\UseUse;
 use PhpParser\Node\VarLikeIdentifier;
 use PhpParser\PrettyPrinter\Standard;
+use function Hyperf\Collection\collect;
 use function Hyperf\Config\config;
 
 class BusinessVisitor extends AbstractVisitor
@@ -64,12 +67,15 @@ class BusinessVisitor extends AbstractVisitor
 
     protected string $classComment;
 
+    protected string $primaryKey;
+
     public function beforeTraverse(array $nodes): void
     {
         $class = $this->data->getClass();
         $this->classComment = CommonUtil::getTableComment((new $class)->getTable());
         $class = explode("\\", $class);
         $this->className = $class[count($class) - 1];
+        $this->primaryKey = collect($this->data->getColumns())->whereNotNull('column_key')->value('column_name');
         $this->collectMapper();
         $this->collectService();
         $this->collectController();
@@ -123,6 +129,7 @@ class BusinessVisitor extends AbstractVisitor
             $uses[] = new Use_([new UseUse(new Name(Inject::class))]);
             $uses[] = new Use_([new UseUse(new Name(Mapper::class))]);
             $uses[] = new Use_([new UseUse(new Name(LengthAwarePaginatorInterface::class))]);
+            $uses[] = new Use_([new UseUse(new Name(Collection::class))]);
             array_push($namespace->stmts, ...$uses);
             $stmts[] = $this->buildProperty();
             $methods = $this->buildMethods();
@@ -193,11 +200,11 @@ class BusinessVisitor extends AbstractVisitor
             $node = new Class_($class);
             $namespace = new Namespace_(new Name($namespace));
             $uses[] = new Use_([new UseUse(new Name($namespaceService . $this->className . "Service"))]);
-            $uses[] = new Use_([new UseUse(new Name("App\Model\\" . $this->className))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "ByIdDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "CreateDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "PageDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "UpdateDtoIn"))]);
+            $uses[] = new Use_([new UseUse(new Name($namespaceIn . $this->className . "DeletesDtoIn"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceOut . $this->className . "InfoDtoOut"))]);
             $uses[] = new Use_([new UseUse(new Name($namespaceOut . $this->className . "ListDtoOut"))]);
             $uses[] = new Use_([new UseUse(new Name(Inject::class))]);
@@ -288,9 +295,11 @@ class BusinessVisitor extends AbstractVisitor
     private function buildMethods(): array
     {
         $nodes[] = $this->buildMethodById();
+        $nodes[] = $this->buildMethodByIds();
         $nodes[] = $this->buildMethodCreate();
         $nodes[] = $this->buildMethodUpdate();
         $nodes[] = $this->buildMethodPageInfo();
+        $nodes[] = $this->buildMethodDeletes();
         return $nodes;
     }
 
@@ -359,10 +368,10 @@ class BusinessVisitor extends AbstractVisitor
         $byIds = Str::camel($this->className . "Ids");
         $node = new ClassMethod(Str::camel("get" . $this->className . "ByIds"), [
             'flags' => Class_::MODIFIER_PUBLIC,
-            'params' => [new Param(new Variable($byIds), null, "int")],
-            'returnType' => $this->className,
+            'params' => [new Param(new Variable($byIds), null, "array")],
+            'returnType' => 'Collection',
         ]);
-        $camelClassName = Str::camel($this->className);
+        $camelClassName = Str::camel($this->className)."s";
         $node->stmts[] = new Expression(
             new Assign(
                 new Variable($camelClassName),
@@ -385,7 +394,7 @@ class BusinessVisitor extends AbstractVisitor
         )));
         $node->stmts[] = $if;
         $node->stmts[] = new Return_(
-            new Variable("Collection")
+            new Variable($camelClassName)
         );
         return $node;
     }
@@ -420,7 +429,7 @@ class BusinessVisitor extends AbstractVisitor
 
     private function buildServiceMethodCreateOrUpdate($type): ClassMethod
     {
-        $returnClassName = $camelClassName = Str::camel($this->className);
+        $camelClassName = Str::camel($this->className)."s";
         $ucFirstType = Str::ucfirst($type);
         $createClassName = $type . $this->className;
         $in = $camelClassName . $ucFirstType . "DtoIn";
@@ -429,7 +438,7 @@ class BusinessVisitor extends AbstractVisitor
         $node = new ClassMethod($createClassName, [
             'flags' => Class_::MODIFIER_PUBLIC,
             'params' => [$param],
-            'returnType' => $this->className,
+            'returnType' => "bool",
         ]);
         $attribute = new Attribute(new Name("Transactional"));
         $attributeGroup[] = new AttributeGroup([$attribute]);
@@ -447,7 +456,9 @@ class BusinessVisitor extends AbstractVisitor
                 ),
             )
         );
-        $args = [new Arg(new Variable($in))];
+        if(in_array($type, ['create','update'])){
+            $args = [new Arg(new Variable($in))];
+        }
         if ($type === 'update') {
             $class = $this->data->getClass();
             $inId = "get" . Str::ucfirst(CommonUtil::getTablePrimaryKey((new $class)->getTable()));
@@ -491,13 +502,12 @@ class BusinessVisitor extends AbstractVisitor
                 )
             );
             $args[] = new Arg(new Variable($camelClassName));
-            $returnClassName = "bool";
         }
         $stmts[] = new Return_(
             new MethodCall(
                 new PropertyFetch(
                     new Variable('this'),
-                    new Identifier($camelClassName . "Mapper"),
+                    new Identifier(Str::camel($this->className) . "Mapper"),
                 ),
                 new Identifier($createClassName),
                 $args
@@ -540,7 +550,7 @@ class BusinessVisitor extends AbstractVisitor
         $node->stmts[] = $if;
 
         $node->stmts[] = new Return_(
-            new Variable($returnClassName)
+            new Variable($camelClassName)
         );
         return $node;
     }
@@ -678,7 +688,7 @@ class BusinessVisitor extends AbstractVisitor
     {
         $camelClassName = Str::camel($this->className);
         $in = $camelClassName . "DeletesDtoIn";
-        $methodName = Str::camel("delete" . $this->className . "s");
+        $methodName = Str::camel("deletes" . $this->className);
         $node = $this->getNode($in, $methodName);
         $arg = new Arg(new String_($this->classComment . "批量删除"));
         return $this->extracted($arg, $methodName, $node, $in);
@@ -715,6 +725,38 @@ class BusinessVisitor extends AbstractVisitor
                 [
                     new Arg(new Variable($byId))
                 ]
+            )
+            ,
+        );
+        return $node;
+    }
+
+    public function buildMethodByIds(): ClassMethod
+    {
+        $byId = Str::camel($this->className . "Ids");
+        $node = new ClassMethod(Str::camel("get" . $this->className . "ByIds"), [
+            'flags' => Class_::MODIFIER_PUBLIC,
+            'params' => [new Param(new Variable($byId), null, "array")],
+            'returnType' => "Collection|null",
+        ]);
+        $node->stmts[] = new Return_(
+            new MethodCall(
+                new MethodCall(
+                    new MethodCall(
+                        new PropertyFetch(
+                            new Variable('this'),
+                            new Identifier(Str::camel($this->className) . "Model"),
+                        ), // 调用的对象
+                        new Identifier('newModelQuery'), // 调用的方法名
+                    ),
+                    new Identifier('where'), // 调用的方法名
+                    [
+                        new Arg(new String_($this->primaryKey)),
+                        new Arg(new Variable($byId)),
+
+                    ]
+                ),
+                new Identifier('get'), // 调用的方法名
             )
             ,
         );
@@ -850,6 +892,50 @@ class BusinessVisitor extends AbstractVisitor
 
         $node->stmts[] = new Return_(
             new Variable($camelClassName)
+        );
+        return $node;
+    }
+    private function buildMethodDeletes(): ClassMethod
+    {
+        $camelClassName = Str::camel($this->className);
+        $camelClassNames = $camelClassName."s";
+        $createClassName = "deletes" . $this->className;
+        $in = $camelClassName . "DeletesDtoIn";
+        $node = new ClassMethod($createClassName, [
+            'flags' => Class_::MODIFIER_PUBLIC,
+            'params' => [
+                new Param(new Variable($camelClassNames), null,'Collection')],
+            'returnType' => 'bool',
+        ]);
+
+        $node->stmts[] =
+            new Expression(
+                new MethodCall(
+                    new Variable($camelClassNames),
+                    new Identifier("map"),
+                    [
+                        new Arg(
+                            new Closure(subNodes: [
+                                'params' => [
+                                    new Variable($camelClassName)
+                                ],
+                                'stmts' => [
+                                    new Return_(
+                                        new MethodCall(
+                                            new Variable($camelClassName),
+                                            new Identifier('delete'), // 被调用的方法名
+                                        ),
+
+                                    )
+                                ]
+                            ])
+                        )
+                    ]
+                )
+            );
+
+        $node->stmts[] = new Return_(
+            new ConstFetch(new Name('true'))
         );
         return $node;
     }

@@ -208,9 +208,11 @@ class GenDtoVisitor extends AbstractVisitor
         $node = $parser->parse($code);
         $this->getStmt($node[0]);
         [$stmts] = $this->buildInProperty($outName);
-        foreach ($node[0]->stmts as $key => $stmt) {
-            if ($stmt instanceof Class_) {
-                array_push($node[0]->stmts[$key]->stmts, ...$stmts);
+        if (!empty($node[0]->stmts)) {
+            foreach ($node[0]->stmts as $key => $stmt) {
+                if ($stmt instanceof Class_) {
+                    array_push($node[0]->stmts[$key]->stmts, ...$stmts);
+                }
             }
         }
         $this->items = [];
@@ -302,11 +304,14 @@ class GenDtoVisitor extends AbstractVisitor
         $node = $parser->parse($code);
         $this->getStmt($node[0]);
         $stmts = $this->buildProperty();
-        foreach ($node[0]->stmts as $key => $stmt) {
-            if ($stmt instanceof Class_) {
-                array_push($node[0]->stmts[$key]->stmts, ...$stmts);
+        if (!empty($node[0]->stmts)) {
+            foreach ($node[0]->stmts as $key => $stmt) {
+                if ($stmt instanceof Class_) {
+                    array_push($node[0]->stmts[$key]->stmts, ...$stmts);
+                }
             }
         }
+
         $this->items = [];
         return (new Standard())->prettyPrintFile($node);
     }
@@ -496,7 +501,7 @@ class GenDtoVisitor extends AbstractVisitor
             $cases[] = $this->getEnumCase('UPDATE_LOCK_KEY', new String_($this->fieldToUnderscore($className) . ':update_lock:'), "编辑锁");
         }
         if (!in_array('DELETES_LOCK_KEY', $this->items, true)) {
-            $cases[] = $this->getEnumCase('DELETE_LOCK_KEY', new String_($this->fieldToUnderscore($className) . ':delete_lock:'), "删除锁");
+            $cases[] = $this->getEnumCase('DELETES_LOCK_KEY', new String_($this->fieldToUnderscore($className) . ':deletes_lock:'), "删除锁");
         }
         array_push($cases, ...$this->getColumnBuildEnumProperty());
         return $cases;
@@ -558,20 +563,20 @@ class GenDtoVisitor extends AbstractVisitor
         $data = [];
         foreach ($columns as $column) {
             if (!in_array(Str::upper($column['column_name']), $this->items, true)) {
-                $commentArray = explode(":", $column['column_comment']);
-                $comment = $commentArray[0] ?? $column['column_comment'];
-                $list = explode(",", $commentArray[1]);
+                $commentArray = explode(":", trim($column['column_comment']));
+                $comment = trim($commentArray[0]) ?? trim($column['column_comment']);
+                $list = explode(",", trim($commentArray[1]));
                 $ext = [];
                 if ($list) {
                     foreach ($list as $item) {
-                        $valueList = explode("-", $item);
+                        $valueList = explode("-", trim($item));
                         if (!empty($valueList)) {
-                            $name = $valueList[0];
+                            $name = trim($valueList[0]);
                             $name = $column['column_name'] . "_" . $name;
                             if (!in_array(Str::upper($name), $this->items, true)) {
-                                $data[] = $this->getEnumCase(Str::upper($name), new String_($valueList[1]), $valueList[0]);
+                                $data[] = $this->getEnumCase(Str::upper($name), new String_(trim($valueList[1])), trim($valueList[0]));
                             }
-                            $ext[] = new ArrayItem(new String_($valueList[1]), new String_($valueList[0]));
+                            $ext[] = new ArrayItem(new String_(trim($valueList[1])), new String_(trim($valueList[0])));
                         }
                     }
                 }
