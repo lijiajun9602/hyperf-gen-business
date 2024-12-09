@@ -75,7 +75,6 @@ class BusinessVisitor extends AbstractVisitor
     }
 
 
-
     private function collectMapper(): void
     {
         $path = config('gen-business.generator.BusinessMappers.namespace', 'app/Mapper');
@@ -99,7 +98,6 @@ class BusinessVisitor extends AbstractVisitor
         $code = $this->getPrettyPrintControllerFile($this->className . "Controller", Str::rtrim($namespace, "\\"), $this->className, $isMkdir, $classPath);
         file_put_contents($classPath, $code);
     }
-
 
 
     private function getPrettyPrintMapperFile(string $class, string $namespace, mixed $isMkdir)
@@ -297,16 +295,19 @@ class BusinessVisitor extends AbstractVisitor
     {
         $nodes[] = $this->buildControllerMethodById();
         $nodes[] = $this->buildControllerMethodPageInfo();
-        $nodes[] = $this->buildServiceMethodCreate();
-        $nodes[] = $this->buildServiceMethodUpdate();
+        $nodes[] = $this->buildControllerMethodCreate();
+        $nodes[] = $this->buildControllerMethodUpdate();
+        $nodes[] = $this->buildControllerMethodDeletes();
         return $nodes;
     }
 
     private function buildServiceMethods(): array
     {
+        $nodes[] = $this->buildServiceMethodByIds();
         $nodes[] = $this->buildServiceMethodById();
         $nodes[] = $this->buildServiceMethodCreateOrUpdate('create');
         $nodes[] = $this->buildServiceMethodCreateOrUpdate('update');
+        $nodes[] = $this->buildServiceMethodCreateOrUpdate('deletes');
         $nodes[] = $this->buildServiceMethodPageInfo();
         return $nodes;
     }
@@ -341,6 +342,42 @@ class BusinessVisitor extends AbstractVisitor
         $if = new If_(new BooleanNot(new Variable($camelClassName)));
         $if->stmts[] = new Expression(new Throw_(new New_(new Name('AppBadRequestException'), args: [
             new Arg(new String_($this->classComment . "不存在"))
+        ]
+        )));
+        $node->stmts[] = $if;
+        $node->stmts[] = new Return_(
+            new Variable($camelClassName)
+        );
+        return $node;
+    }
+
+    public function buildServiceMethodByIds(): ClassMethod
+    {
+        $byIds = Str::camel($this->className . "Ids");
+        $node = new ClassMethod(Str::camel("get" . $this->className . "ByIds"), [
+            'flags' => Class_::MODIFIER_PUBLIC,
+            'params' => [new Param(new Variable($byIds), null, "int")],
+            'returnType' => $this->className,
+        ]);
+        $camelClassName = Str::camel($this->className);
+        $node->stmts[] = new Expression(
+            new Assign(
+                new Variable($camelClassName),
+                new MethodCall(
+                    new PropertyFetch(
+                        new Variable('this'),
+                        new Identifier(Str::camel($this->className) . "Mapper"),
+                    ),
+                    new Identifier(Str::camel("get" . $this->className . "ByIds")), // 调用的方法名
+                    [
+                        new Arg(new Variable($byIds))
+                    ]
+                )
+            )
+        );
+        $if = new If_(new BooleanNot(new Variable($camelClassName)));
+        $if->stmts[] = new Expression(new Throw_(new New_(new Name('AppBadRequestException'), args: [
+            new Arg(new String_($this->classComment . "集合不存在"))
         ]
         )));
         $node->stmts[] = $if;
@@ -406,9 +443,10 @@ class BusinessVisitor extends AbstractVisitor
                 ),
             )
         );
-        $class = $this->data->getClass();
-        $inId = "get" . Str::ucfirst(Str::camel((new $class)->getKeyName()));
+        $args = [new Arg(new Variable($in))];
         if ($type === 'update') {
+            $class = $this->data->getClass();
+            $inId = "get" . Str::ucfirst(CommonUtil::getTablePrimaryKey((new $class)->getTable()));
             $stmts[] = new Expression(
                 new Assign(
                     new Variable($camelClassName),
@@ -426,30 +464,40 @@ class BusinessVisitor extends AbstractVisitor
                     ),
                 )
             );
-            $stmts[] = new Return_(
-                new MethodCall(
-                    new PropertyFetch(
-                        new Variable('this'),
-                        new Identifier($camelClassName . "Mapper"),
-                    ),
-                    new Identifier($createClassName),
-                    [new Arg(new Variable($in)),
-
-                        new Arg(new Variable($camelClassName))]
-                )
-            );
-        } else {
-            $stmts[] = new Return_(
-                new MethodCall(
-                    new PropertyFetch(
-                        new Variable('this'),
-                        new Identifier($camelClassName . "Mapper"),
-                    ),
-                    new Identifier($createClassName),
-                    [new Arg(new Variable($in)),]
-                )
-            );
+            $args[] = new Arg(new Variable($camelClassName));
         }
+        if($type==='deletes'){
+            $class = $this->data->getClass();
+            $inId = "get" . Str::ucfirst(CommonUtil::getTablePrimaryKey((new $class)->getTable()))."s";
+            $stmts[] = new Expression(
+                new Assign(
+                    new Variable($camelClassName),
+                    new MethodCall(
+                        new Variable('this'),
+                        new Identifier("get" . $this->className . "ByIds"), // 被调用的方法名
+                        [
+                            new Arg(
+                                new MethodCall(
+                                    new Variable($in),
+                                    new Identifier($inId)
+                                )
+                            )
+                        ]
+                    ),
+                )
+            );
+            $args[] = new Arg(new Variable($camelClassName));
+        }
+        $stmts[] = new Return_(
+            new MethodCall(
+                new PropertyFetch(
+                    new Variable('this'),
+                    new Identifier($camelClassName . "Mapper"),
+                ),
+                new Identifier($createClassName),
+                $args
+            )
+        );
 
         $node->stmts[] =
             new Expression(
@@ -611,7 +659,7 @@ class BusinessVisitor extends AbstractVisitor
         return $node;
     }
 
-    public function buildServiceMethodCreate(): ClassMethod
+    public function buildControllerMethodCreate(): ClassMethod
     {
         $camelClassName = Str::camel($this->className);
         $in = $camelClassName . "CreateDtoIn";
@@ -621,7 +669,17 @@ class BusinessVisitor extends AbstractVisitor
         return $this->extracted($arg, $methodName, $node, $in);
     }
 
-    public function buildServiceMethodUpdate(): ClassMethod
+    public function buildControllerMethodDeletes(): ClassMethod
+    {
+        $camelClassName = Str::camel($this->className);
+        $in = $camelClassName . "DeletesDtoIn";
+        $methodName = Str::camel("delete" . $this->className . "s");
+        $node = $this->getNode($in, $methodName);
+        $arg = new Arg(new String_($this->classComment . "批量删除"));
+        return $this->extracted($arg, $methodName, $node, $in);
+    }
+
+    public function buildControllerMethodUpdate(): ClassMethod
     {
         $camelClassName = Str::camel($this->className);
         $in = $camelClassName . "UpdateDtoIn";
