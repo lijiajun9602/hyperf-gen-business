@@ -487,6 +487,7 @@ class BusinessVisitor extends AbstractVisitor
                 )
             );
             $args[] = new Arg(new Variable($camelClassName));
+            $createClassName = "bool";
         }
         $stmts[] = new Return_(
             new MethodCall(

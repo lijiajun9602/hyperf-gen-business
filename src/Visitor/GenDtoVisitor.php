@@ -74,14 +74,15 @@ class GenDtoVisitor extends AbstractVisitor
         $dtoOutPath = $path . "/" . $class[count($class) - 1];
         $inPath = $dtoOutPath . "/In";
         $outPath = $dtoOutPath . "/Out";
-        $this->mkdir(BASE_PATH. '/' . $dtoOutPath, 1);
-        $this->mkdir(BASE_PATH. '/' . $inPath, 1);
-        $this->mkdir(BASE_PATH. '/' . $outPath, 1);
+        $this->mkdir(BASE_PATH . '/' . $dtoOutPath, 1);
+        $this->mkdir(BASE_PATH . '/' . $inPath, 1);
+        $this->mkdir(BASE_PATH . '/' . $outPath, 1);
         $this->collectEnums($class);
         $this->collectClassOut($outPath, $class, "ListDtoOut");
         $this->collectClassOut($outPath, $class, "InfoDtoOut");
         $this->collectClassIn($inPath, $class, "CreateDtoIn");
         $this->collectClassIn($inPath, $class, "UpdateDtoIn");
+        $this->collectClassIn($inPath, $class, "UserDeletesDtoIn");
         $this->collectClassIn($inPath, $class, "ByIdDtoIn");
         $this->collectClassIn($inPath, $class, "PageDtoIn");
 
@@ -100,7 +101,7 @@ class GenDtoVisitor extends AbstractVisitor
     public function getStmt($node): void
     {
         $items = [];
-        if(empty($node->stmts)){
+        if (empty($node->stmts)) {
             return;
         }
         foreach ($node->stmts as $value) {
@@ -200,7 +201,7 @@ class GenDtoVisitor extends AbstractVisitor
             $node->attrGroups = $attributeGroup;
 
             array_push($node->stmts, ...$stmts);
-            return $prettyPrinter->prettyPrintFile([$declareStrictTypes,$namespace, $node]);
+            return $prettyPrinter->prettyPrintFile([$declareStrictTypes, $namespace, $node]);
         }
         $code = file_get_contents($classPath);
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
@@ -223,9 +224,9 @@ class GenDtoVisitor extends AbstractVisitor
                 'scalarType' => 'string',
             ]);
             $node->implements = [new Name("EnumCodeInterface")];
-            $arg = new Arg(new String_($class ));
+            $arg = new Arg(new String_($class));
             $arg->name = new Identifier("prefixCode");
-            $arg1 = new Arg(new String_($className ));
+            $arg1 = new Arg(new String_($className));
             $arg1->name = new Identifier("prefixMsg");
             $attribute = new Attribute(new Name("EnumCodePrefix"), [$arg, $arg1]);
             $attributeGroup[] = new AttributeGroup([$attribute]);
@@ -294,7 +295,7 @@ class GenDtoVisitor extends AbstractVisitor
             $attributeGroup = new AttributeGroup([$attribute]);
             $node->attrGroups = [$attributeGroup];
             array_push($node->stmts, ...$this->buildProperty());
-            return $prettyPrinter->prettyPrintFile([$declareStrictTypes,$namespace, $node]);
+            return $prettyPrinter->prettyPrintFile([$declareStrictTypes, $namespace, $node]);
         }
         $code = file_get_contents($classPath);
         $parser = (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
@@ -326,6 +327,9 @@ class GenDtoVisitor extends AbstractVisitor
             if ($outName === 'ByIdDtoIn' && empty($column['column_key'])) {
                 continue;
             }
+            if ($outName === 'DeletesDtoIn' && empty($column['column_key'])) {
+                continue;
+            }
             if ($outName === 'PageDtoIn') {
                 continue;
             }
@@ -335,6 +339,13 @@ class GenDtoVisitor extends AbstractVisitor
             }
             if ($column['column_name'] === 'user_id') {
                 continue;
+            }
+            if ($outName === 'DeletesDtoIn' && !empty($column['column_key'])) {
+                $name = $column['column_name'] . "s";
+                $column['data_type'] = "array";
+                $column['column_type'] = "array";
+                $column['data_comment'] = $column['column_comment'] . "集合";
+                $type = "array";
             }
             $stmt = $this->createInProperty($name, $type, $column);
             if ($stmt !== null) {
