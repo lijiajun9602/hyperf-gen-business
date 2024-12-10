@@ -27,6 +27,7 @@ class ConfigProvider
                         AppExceptionHandler::class
                     ],
                 ],
+                ],
             'publish' => [
                 [
                     'id' => 'config',
