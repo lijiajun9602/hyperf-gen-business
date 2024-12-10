@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace Hyperf\GenBusiness;
 
+use Hyperf\GenBusiness\Common\Exception\Handler\AppExceptionHandler;
+
 class ConfigProvider
 {
     public function __invoke(): array
@@ -18,6 +20,13 @@ class ConfigProvider
                     ],
                 ],
             ],
+            'exceptions'=> [
+                'handler' => [
+                    'http' => [
+                        'Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class',
+                        AppExceptionHandler::class
+                    ],
+                ],
             'publish' => [
                 [
                     'id' => 'config',
