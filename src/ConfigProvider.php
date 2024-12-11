@@ -23,7 +23,7 @@ class ConfigProvider
             'exceptions'=> [
                 'handler' => [
                     'http' => [
-                        'Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class',
+                       // 'Hyperf\HttpServer\Exception\Handler\HttpExceptionHandler::class',
                         AppExceptionHandler::class
                     ],
                 ],
