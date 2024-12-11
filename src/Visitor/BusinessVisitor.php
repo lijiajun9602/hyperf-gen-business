@@ -28,7 +28,6 @@ use PhpParser\Node\Attribute;
 use PhpParser\Node\AttributeGroup;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\BooleanNot;
-use PhpParser\Node\Expr\Cast\Bool_;
 use PhpParser\Node\Expr\ClassConstFetch;
 use PhpParser\Node\Expr\Closure;
 use PhpParser\Node\Expr\ConstFetch;
@@ -433,12 +432,16 @@ class BusinessVisitor extends AbstractVisitor
         $ucFirstType = Str::ucfirst($type);
         $createClassName = $type . $this->className;
         $in = $camelClassName . $ucFirstType . "DtoIn";
-
+        $returnType = "bool";
         $param = new Param(new Variable($in), null, $this->className . $ucFirstType . "DtoIn");
+        if(in_array($type, ['create','update'])){
+            $args = [new Arg(new Variable($in))];
+            $returnType = $this->className;
+        }
         $node = new ClassMethod($createClassName, [
             'flags' => Class_::MODIFIER_PUBLIC,
             'params' => [$param],
-            'returnType' => "bool",
+            'returnType' => $returnType
         ]);
         $attribute = new Attribute(new Name("Transactional"));
         $attributeGroup[] = new AttributeGroup([$attribute]);
@@ -456,9 +459,7 @@ class BusinessVisitor extends AbstractVisitor
                 ),
             )
         );
-        if(in_array($type, ['create','update'])){
-            $args = [new Arg(new Variable($in))];
-        }
+
         if ($type === 'update') {
             $class = $this->data->getClass();
             $inId = "get" . Str::ucfirst(CommonUtil::getTablePrimaryKey((new $class)->getTable()));
