@@ -627,7 +627,7 @@ class BusinessVisitor extends AbstractVisitor
         $node = $this->getNode($in, $methodName);
         $arg = new Arg(new String_($this->classComment . "分页列表"));
         $arg->name = new Identifier("summary");
-        $attribute1 = new Attribute(new Name("ApiOperation"), [$arg]);ø0ººº0
+        $attribute1 = new Attribute(new Name("ApiOperation"), [$arg]);
         $arg = new Arg(new String_("v1.0/" . $methodName));
         $arg->name = new Identifier("path");
         $attribute2 = new Attribute(new Name("PostMapping"), [$arg]);
