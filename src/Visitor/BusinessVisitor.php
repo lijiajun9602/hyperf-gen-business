@@ -26,6 +26,7 @@ use Hyperf\Stringable\Str;
 use PhpParser\Node\Arg;
 use PhpParser\Node\Attribute;
 use PhpParser\Node\AttributeGroup;
+use PhpParser\Node\Expr\Array_;
 use PhpParser\Node\Expr\Assign;
 use PhpParser\Node\Expr\BooleanNot;
 use PhpParser\Node\Expr\ClassConstFetch;
@@ -626,12 +627,12 @@ class BusinessVisitor extends AbstractVisitor
         $node = $this->getNode($in, $methodName);
         $arg = new Arg(new String_($this->classComment . "分页列表"));
         $arg->name = new Identifier("summary");
-        $attribute1 = new Attribute(new Name("ApiOperation"), [$arg]);
+        $attribute1 = new Attribute(new Name("ApiOperation"), [$arg]);ø0ººº0
         $arg = new Arg(new String_("v1.0/" . $methodName));
         $arg->name = new Identifier("path");
         $attribute2 = new Attribute(new Name("PostMapping"), [$arg]);
         $arg = new Arg(new New_(new Name("ResponseClass"), args: [
-            new Arg(new New_(new Name(Str::ucfirst($camelClassName) . "ListDtoOut"), args: []))
+            new Arg(new New_(new Array_([new Name(Str::ucfirst($camelClassName) . "ListDtoOut")]), args: []))
         ]));
         $arg->name = new Identifier("returnType");
         $attribute3 = new Attribute(new Name("ApiResponse"), [$arg]);
