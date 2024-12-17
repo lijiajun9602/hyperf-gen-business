@@ -632,7 +632,7 @@ class BusinessVisitor extends AbstractVisitor
         $arg->name = new Identifier("path");
         $attribute2 = new Attribute(new Name("PostMapping"), [$arg]);
         $arg = new Arg(new New_(new Name("ResponseClass"), args: [
-            new Arg(new New_(new Array_([new Name(Str::ucfirst($camelClassName) . "ListDtoOut")]), args: []))
+            new Arg(new Array_([new New_(new Name(Str::ucfirst($camelClassName) . "ListDtoOut"), args: [])]))
         ]));
         $arg->name = new Identifier("returnType");
         $attribute3 = new Attribute(new Name("ApiResponse"), [$arg]);
