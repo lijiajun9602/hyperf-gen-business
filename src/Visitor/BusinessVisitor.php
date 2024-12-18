@@ -719,11 +719,24 @@ class BusinessVisitor extends AbstractVisitor
         $node->stmts[] = new Return_(
             new MethodCall(
                 new MethodCall(
-                    new PropertyFetch(
-                        new Variable('this'),
-                        new Identifier(Str::camel($this->className) . "Model"),
-                    ), // 调用的对象
-                    new Identifier('newModelQuery'), // 调用的方法名
+                    new MethodCall(
+                        new PropertyFetch(
+                            new Variable('this'),
+                            new Identifier(Str::camel($this->className) . "Model"),
+                        ), // 调用的对象
+                        new Identifier('newModelQuery'), // 调用的方法名
+                    ),
+                    new Identifier('select'), // 调用的方法名
+                    [
+                        new Arg(
+                            new PropertyFetch(
+                                new PropertyFetch(
+                                new Variable('this'),
+                                new Identifier(Str::camel($this->className) . "Model")
+                            ),   new Identifier("infoSelect")
+                            )),
+
+                    ]
                 ),
                 new Identifier('find'), // 调用的方法名
                 [
