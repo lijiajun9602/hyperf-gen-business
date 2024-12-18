@@ -438,6 +438,8 @@ class BusinessVisitor extends AbstractVisitor
         if(in_array($type, ['create','update'])){
             $args = [new Arg(new Variable($in))];
             $returnType = $this->className;
+        }else{
+            $camelClassName.="List";
         }
         $node = new ClassMethod($createClassName, [
             'flags' => Class_::MODIFIER_PUBLIC,
