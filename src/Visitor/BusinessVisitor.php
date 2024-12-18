@@ -429,7 +429,7 @@ class BusinessVisitor extends AbstractVisitor
 
     private function buildServiceMethodCreateOrUpdate($type): ClassMethod
     {
-        $camelClassName = Str::camel($this->className)."s";
+        $camelClassName = Str::camel($this->className);
         $ucFirstType = Str::ucfirst($type);
         $createClassName = $type . $this->className;
         $in = $camelClassName . $ucFirstType . "DtoIn";
