@@ -371,7 +371,7 @@ class BusinessVisitor extends AbstractVisitor
             'params' => [new Param(new Variable($byIds), null, "array")],
             'returnType' => 'Collection',
         ]);
-        $camelClassName = Str::camel($this->className)."s";
+        $camelClassName = Str::camel($this->className)."List";
         $node->stmts[] = new Expression(
             new Assign(
                 new Variable($camelClassName),
