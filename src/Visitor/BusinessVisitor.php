@@ -724,7 +724,7 @@ class BusinessVisitor extends AbstractVisitor
                             new Variable('this'),
                             new Identifier(Str::camel($this->className) . "Model"),
                         ), // 调用的对象
-                        new Identifier('newModelQuery'), // 调用的方法名
+                        new Identifier('newQuery'), // 调用的方法名
                     ),
                     new Identifier('select'), // 调用的方法名
                     [
@@ -764,9 +764,9 @@ class BusinessVisitor extends AbstractVisitor
                             new Variable('this'),
                             new Identifier(Str::camel($this->className) . "Model"),
                         ), // 调用的对象
-                        new Identifier('newModelQuery'), // 调用的方法名
+                        new Identifier('newQuery'), // 调用的方法名
                     ),
-                    new Identifier('where'), // 调用的方法名
+                    new Identifier('whereIn'), // 调用的方法名
                     [
                         new Arg(new String_($this->primaryKey)),
                         new Arg(new Variable($byId)),
@@ -850,7 +850,7 @@ class BusinessVisitor extends AbstractVisitor
                         new Variable('this'),
                         new Identifier(Str::camel($this->className) . "Model"),
                     ), // 调用的对象
-                    new Identifier('newModelQuery'), // 调用的方法名
+                    new Identifier('newQuery'), // 调用的方法名
                 ),
                 new Identifier('paginate'), // 调用的方法名
                 [
