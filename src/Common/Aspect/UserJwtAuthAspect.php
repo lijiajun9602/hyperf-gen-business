@@ -55,8 +55,8 @@ class UserJwtAuthAspect extends AbstractAspect
                 /** @var UserJwtAuthIn $arguments */
                 $arguments = $proceedingJoinPoint->getArguments()[0];
                 if ($arguments) {
-                    $arguments->setUserId($user['userId']);
-                    $arguments->setNickName($user['nickName']??"无");
+                    $arguments->userId = $user['userId'];
+                    $arguments->nickname = $user['nickName']??"无";
                 }
 
             } else {
