@@ -7,9 +7,6 @@ namespace Hyperf\GenBusiness\Common\Dto;
 use Hyperf\ApiDocs\Annotation\ApiModel;
 use Hyperf\ApiDocs\Annotation\ApiModelProperty;
 use Hyperf\DTO\Annotation\Dto;
-use Hyperf\PhpAccessor\Annotation\HyperfData;
-use PhpAccessor\Attribute\Data;
-
 #[Dto]
 #[ApiModel(value: 'UserJwtAuthIn入参')]
 class UserJwtAuthIn
