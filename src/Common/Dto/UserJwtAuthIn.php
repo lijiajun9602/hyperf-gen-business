@@ -15,7 +15,9 @@ use PhpAccessor\Attribute\Data;
 class UserJwtAuthIn
 {
     #[ApiModelProperty(value: '用户ID Token获得', hidden: true)]
-    public int $userId;
+    public ?int $userId;
+    #[ApiModelProperty(value: '用户昵称', hidden: true)]
+    public ?string $nickName;
 
     /**
      * @return int
@@ -48,6 +50,5 @@ class UserJwtAuthIn
     {
         $this->nickName = $nickName;
     }
-    #[ApiModelProperty(value: '用户昵称', hidden: true)]
-    public string $nickName;
+
 }
