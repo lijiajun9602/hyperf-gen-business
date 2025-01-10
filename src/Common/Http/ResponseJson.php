@@ -2,9 +2,9 @@
 
 namespace Hyperf\GenBusiness\Common\Http;
 
+use Hyperf\DTO\Mapper;
 use Hyperf\GenBusiness\Common\Dto\MetaClass;
 use Hyperf\GenBusiness\Common\Dto\ResponseClass;
-use Hyperf\GenBusiness\Common\Util\Mapper;
 use Hyperf\HttpServer\Contract\ResponseInterface;
 use Hyperf\Paginator\LengthAwarePaginator;
 use Psr\Container\ContainerInterface;
