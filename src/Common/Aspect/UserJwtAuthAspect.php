@@ -57,6 +57,7 @@ class UserJwtAuthAspect extends AbstractAspect
                 if ($arguments) {
                     $arguments->userId = $user['userId'];
                     $arguments->nickName = $user['nickName']??"无";
+                    $arguments->mobile = $user['mobile']??"无";
                 }
 
             } else {
