@@ -7,6 +7,7 @@ namespace Hyperf\GenBusiness\Common\Dto;
 use Hyperf\ApiDocs\Annotation\ApiModel;
 use Hyperf\ApiDocs\Annotation\ApiModelProperty;
 use Hyperf\DTO\Annotation\Dto;
+
 #[Dto]
 #[ApiModel(value: 'UserJwtAuthIn入参')]
 class UserJwtAuthIn
@@ -15,8 +16,6 @@ class UserJwtAuthIn
     public ?int $userId;
     #[ApiModelProperty(value: '用户昵称', hidden: true)]
     public ?string $nickName;
-
-
 
     /**
      * @return int
