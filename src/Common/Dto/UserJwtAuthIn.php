@@ -16,24 +16,7 @@ class UserJwtAuthIn
     #[ApiModelProperty(value: '用户昵称', hidden: true)]
     public ?string $nickName;
 
-    #[ApiModelProperty(value: '用户手机号', hidden: true)]
-    public ?string $mobile;
 
-    /**
-     * @return string|null
-     */
-    public function getMobile(): ?string
-    {
-        return $this->mobile;
-    }
-
-    /**
-     * @param string|null $mobile
-     */
-    public function setMobile(?string $mobile): void
-    {
-        $this->mobile = $mobile;
-    }
 
     /**
      * @return int
