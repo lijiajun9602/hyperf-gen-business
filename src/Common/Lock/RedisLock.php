@@ -27,21 +27,20 @@ class RedisLock extends Lock
         try {
             // 使用 Lua 脚本将 setnx 和 expire 原子化
             $luaScript = "
-                if redis.call('SETNX', KEYS[1], ARGV[1]) == 1 then
-                    if tonumber(ARGV[2]) > 0 then
-                        redis.call('EXPIRE', KEYS[1], ARGV[2])
-                    end
-                    return 1
-                else
-                    return 0
+            if redis.call('SETNX', KEYS[1], ARGV[1]) == 1 then
+                if tonumber(ARGV[2]) > 0 then
+                    redis.call('EXPIRE', KEYS[1], ARGV[2])
                 end
-            ";
+                return 1
+            else
+                return 0
+            end
+        ";
             $result = $this->redis->eval($luaScript, [$this->name, $this->owner, $this->seconds], 1);
 
-            return intval($result) === 1;
+            return $result === 1;
         } catch (\Exception|\Throwable $e) {
             // 记录日志并返回 false
-          //  error_log("Redis operation failed: " . $e->getMessage());
             return false;
         }
     }
