@@ -39,7 +39,7 @@ class RedisLock extends Lock
             $result = $this->redis->eval($luaScript, [$this->name, $this->owner, $this->seconds], 1);
 
             return $result === 1;
-        } catch (\Exception|\Throwable $e) {
+        } catch (RedisException $e) {
             // 记录日志并返回 false
             return false;
         }
